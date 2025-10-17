@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 public enum Token_Class
 {
-    Begin, Call, Declare, End, Do, Else, EndIf, EndUntil, EndWhile, If, Integer,
-    Parameters, Procedure, Program, Read, Real, Set, Then, Until, While, Write,
-    Dot, Semicolon, Comma, LParanthesis, RParanthesis, EqualOp, LessThanOp,
-    GreaterThanOp, NotEqualOp, PlusOp, MinusOp, MultiplyOp, DivideOp,
-    Idenifier, Constant
+    Int, Float, String, Read, Write, Repeat, Until, If, ElseIf, Else, Then, Return, Endl,
+    PlusOp, MinusOp, MultiplyOp, DivideOp, LessThanOp, GreaterThanOp, EqualOp, NotEqualOp, AndOp, OrOp,
+    AssignmentOp, LParanthesis, RParanthesis, LCurly, RCurly, Semicolon, Comma, Identifier, Number, StringLiteral
 }
-namespace JASON_Compiler
+namespace TINY_Compiler
 {
     
 
@@ -30,47 +28,48 @@ namespace JASON_Compiler
 
         public Scanner()
         {
-            ReservedWords.Add("IF", Token_Class.If);
-            ReservedWords.Add("BEGIN", Token_Class.Begin);
-            ReservedWords.Add("CALL", Token_Class.Call);
-            ReservedWords.Add("DECLARE", Token_Class.Declare);
-            ReservedWords.Add("END", Token_Class.End);
-            ReservedWords.Add("DO", Token_Class.Do);
-            ReservedWords.Add("ELSE", Token_Class.Else);
-            ReservedWords.Add("ENDIF", Token_Class.EndIf);
-            ReservedWords.Add("ENDUNTIL", Token_Class.EndUntil);
-            ReservedWords.Add("ENDWHILE", Token_Class.EndWhile);
-            ReservedWords.Add("INTEGER", Token_Class.Integer);
-            ReservedWords.Add("PARAMETERS", Token_Class.Parameters);
-            ReservedWords.Add("PROCEDURE", Token_Class.Procedure);
-            ReservedWords.Add("PROGRAM", Token_Class.Program);
-            ReservedWords.Add("READ", Token_Class.Read);
-            ReservedWords.Add("REAL", Token_Class.Real);
-            ReservedWords.Add("SET", Token_Class.Set);
-            ReservedWords.Add("THEN", Token_Class.Then);
-            ReservedWords.Add("UNTIL", Token_Class.Until);
-            ReservedWords.Add("WHILE", Token_Class.While);
-            ReservedWords.Add("WRITE", Token_Class.Write);
+            ReservedWords.Add("int", Token_Class.Int);
+            ReservedWords.Add("float", Token_Class.Float);
+            ReservedWords.Add("string", Token_Class.String);
+            ReservedWords.Add("read", Token_Class.Read);
+            ReservedWords.Add("write", Token_Class.Write);
+            ReservedWords.Add("repeat", Token_Class.Repeat);
+            ReservedWords.Add("until", Token_Class.Until);
+            ReservedWords.Add("if", Token_Class.If);
+            ReservedWords.Add("elseif", Token_Class.ElseIf);
+            ReservedWords.Add("else", Token_Class.Else);
+            ReservedWords.Add("then", Token_Class.Then);
+            ReservedWords.Add("return", Token_Class.Return);
+            ReservedWords.Add("endl", Token_Class.Endl);
 
-            Operators.Add(".", Token_Class.Dot);
-            Operators.Add(";", Token_Class.Semicolon);
-            Operators.Add(",", Token_Class.Comma);
-            Operators.Add("(", Token_Class.LParanthesis);
-            Operators.Add(")", Token_Class.RParanthesis);
-            Operators.Add("=", Token_Class.EqualOp);
-            Operators.Add("<", Token_Class.LessThanOp);
-            Operators.Add(">", Token_Class.GreaterThanOp);
-            Operators.Add("!", Token_Class.NotEqualOp);
             Operators.Add("+", Token_Class.PlusOp);
             Operators.Add("-", Token_Class.MinusOp);
             Operators.Add("*", Token_Class.MultiplyOp);
             Operators.Add("/", Token_Class.DivideOp);
 
+            // Condition Operators
+            Operators.Add("<", Token_Class.LessThanOp);
+            Operators.Add(">", Token_Class.GreaterThanOp);
+            Operators.Add("=", Token_Class.EqualOp);
+            Operators.Add("<>", Token_Class.NotEqualOp);
 
+            // Boolean Operators
+            Operators.Add("&&", Token_Class.AndOp);
+            Operators.Add("||", Token_Class.OrOp);
+
+            // Don't forget the assignment operator from your spec!
+            Operators.Add(":=", Token_Class.AssignmentOp);
+            // Punctuation and Delimiters
+            Operators.Add("(", Token_Class.LParanthesis);
+            Operators.Add(")", Token_Class.RParanthesis);
+            Operators.Add("{", Token_Class.LCurly);
+            Operators.Add("}", Token_Class.RCurly);
+            Operators.Add(";", Token_Class.Semicolon);
+            Operators.Add(",", Token_Class.Comma);
 
         }
 
-    public void StartScanning(string SourceCode)
+        public void StartScanning(string SourceCode)
         {
             for(int i=0; i<SourceCode.Length;i++)
             {
@@ -100,7 +99,7 @@ namespace JASON_Compiler
                 }
             }
             
-            JASON_Compiler.TokenStream = Tokens;
+            TINY_Compiler.TokenStream = Tokens;
         }
         void FindTokenClass(string Lex)
         {
