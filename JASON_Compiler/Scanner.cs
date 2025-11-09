@@ -131,7 +131,7 @@ namespace TINY_Compiler
                     }
                     if (i < SourceCode.Length) 
                     {
-                        CurrentLexeme += SourceCode[i]; // Add the closing quote
+                        CurrentLexeme += SourceCode[i]; 
                         i++;
                     }
                     Tokens.Add(new Token { lex = CurrentLexeme, token_type = Token_Class.StringLiteral });
@@ -151,7 +151,6 @@ namespace TINY_Compiler
                     }
                     continue; 
                 }
-                // Handle Operators and Punctuation
                 else
                 {
                     // Check for 2-character operators first
@@ -175,7 +174,7 @@ namespace TINY_Compiler
                         continue;
                     }
 
-                    // Handle unrecognized characters if necessary
+                    Errors.Error_List.Add($"Unrecognized token: '{CurrentChar}'");
                     i++;
                 }
             }
@@ -188,19 +187,18 @@ namespace TINY_Compiler
 
             // Is it a reserved word?
             if (ReservedWords.ContainsKey(Lex))
-            {
                 Tok.token_type = ReservedWords[Lex];
-            }
             // Is it an operator?
             else if (Operators.ContainsKey(Lex))
-            {
                 Tok.token_type = Operators[Lex];
-            }
             // Is it an identifier?
-            else
-            {
+            else if (Regex.IsMatch(Lex, @"^[a-zA-Z][a-zA-Z0-9]*$"))
                 Tok.token_type = Token_Class.Identifier;
+            else { 
+                Errors.Error_List.Add($"Invalid token: '{Lex}'");
+                return;
             }
+
             Tokens.Add(Tok);
         }
     }
